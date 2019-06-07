@@ -9,11 +9,8 @@ var client = mqtt.connect(mqtt_url, options);
 var documents;
 const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://andriesdeklerck:EM2X1IeuoJ98WUJN@temperatuurtest-ecobh.azure.mongodb.net/Temperatuur?retryWrites=true', {useNewUrlParser: true});
-
 var db = mongoose.connection;
 db.on('error', console.error.bind(console,'connection error:'));
-
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   var config =  url.parse(mqtt_url);
@@ -22,39 +19,31 @@ router.get('/', function(req, res, next) {
     connected: client.connected,
     config: config
   });
-  
   db.once('open', function() {
 	//connectie
 	console.log("we're connected");
 });
-  
-  
-  
   Object.keys(mongoose.connection.models).forEach(key => {
       delete mongoose.connection.models[key];
     });
     
     //aanmaak schema
     var tempSchema = new mongoose.Schema({
-    id: Number,
     temp: Number,
     lucht: Number
     });
     
     //schema compileren in model
     //eerste parameter is naam van collectie maar in enkelvoud (Value => values)
-    var values = mongoose.model('values2', tempSchema);
+    var values = mongoose.model('values', tempSchema);
 
     values.find(null, function (err, docs) {
       documents = docs;
         res.render('index', { temperatuur: JSON.stringify(docs)});
         console.log(JSON.stringify(docs))
     });
-    
-    //if(documents.id > 20){
-      //db.col.remove({$where: "id > 1"});
-    //}
 });
+
 
 client.on('connect', function() {
   router.post('/publish', function(req, res) {
