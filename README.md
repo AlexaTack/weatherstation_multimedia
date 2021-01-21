@@ -1,2 +1,2 @@
-# weatherstation_multimedia
-Project weerstation Andries en Alexander
+# Weatherstation
+***Project weatherstation for lab multimedia by Andries en Alexander***
